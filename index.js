@@ -53,7 +53,7 @@ const owner = process.env.GITHUB_REPOSITORY.split("/")[0];
 const repo = process.env.GITHUB_REPOSITORY.split("/")[1];
 const pullNumber = getPRNumber();
 
-fetchReleaseNotes(owner, repo, pullNumber)
+fetchCommitNotes(owner, repo, pullNumber)
   .then(commitNotes => {
     core.setOutput("commit-notes-md", commitNotes)
   })
