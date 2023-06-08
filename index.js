@@ -1,6 +1,7 @@
 const core = require('@actions/core');
 const { Octokit } = require('@octokit/rest');
 
+//This function fetches the commit notes
 async function fetchCommitNotes(owner, repo, pullRequestNumber){
   const octokit = new Octokit({
     auth: process.env.GITHUB_TOKEN 
