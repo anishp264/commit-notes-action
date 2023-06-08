@@ -10719,6 +10719,7 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(2186);
 const { Octokit } = __nccwpck_require__(5375);
 
+//This function fetches the commit notes
 async function fetchCommitNotes(owner, repo, pullRequestNumber){
   const octokit = new Octokit({
     auth: process.env.GITHUB_TOKEN 
@@ -10771,7 +10772,7 @@ const owner = process.env.GITHUB_REPOSITORY.split("/")[0];
 const repo = process.env.GITHUB_REPOSITORY.split("/")[1];
 const pullNumber = getPRNumber();
 
-fetchReleaseNotes(owner, repo, pullNumber)
+fetchCommitNotes(owner, repo, pullNumber)
   .then(commitNotes => {
     core.setOutput("commit-notes-md", commitNotes)
   })
