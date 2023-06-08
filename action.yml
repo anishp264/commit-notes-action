@@ -1,0 +1,9 @@
+name: Get Commit Notes
+author: Anish Punnen
+description: This action fetches all the commit notes associated with a Pull Request
+outputs:
+  commit-notes-md:
+    description: commit notes as a mark down
+runs:
+  using: "node16"
+  main: "index.js"
