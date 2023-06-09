@@ -33,15 +33,15 @@ async function fetchCommitNotes(owner, repo, pullRequestNumber){
 
     let markdownContent = `# Merge Notes
     ## ${prResponse.data.title}
-    ### ${prResponse.data.body}
-    
+    ${prResponse.data.body}
+    ---
     # Commit Notes`;
-
+    
     commits.forEach((commit) => {
       markdownContent += `
-      - ${commit.commitDate}|${commit.commitSha.slice(0,6)}|${commit.message}[${commit.committerEmail}]
-      `;;
+      - ${commit.commitDate} | ${commit.commitSha.slice(0,6)} | ${commit.message} [${commit.committerEmail}]`;
     });
+    markdownContent += '---';
     return markdownContent;
   } catch (error) {
     console.setFailed('Error retrieving commit messages:', error);
