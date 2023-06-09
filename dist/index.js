@@ -10749,13 +10749,11 @@ async function fetchCommitNotes(owner, repo, pullRequestNumber){
       return container;
     });
 
-    let markdownContent = '# Merge Notes';
-
-    markdownContent += `## ${prResponse.data.title}
+    let markdownContent = `# Merge Notes
+    ## ${prResponse.data.title}
     ### ${prResponse.data.body}
-    -----------------------------------------------------------------`;
-
-    markdownContent += '# Commit Notes';
+    
+    # Commit Notes`;
 
     commits.forEach((commit) => {
       markdownContent += `
