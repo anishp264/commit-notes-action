@@ -18,21 +18,17 @@ async function fetchCommitNotes(owner, repo, pullRequestNumber){
       const container = {};
       container.message = commit.commit.message;
       container.committerName = commit.commit.committer.name;
+      container.committerEmail = commit.commit.committer.email;
       container.commitDate = commit.commit.committer.date;
       container.commitSha = commit.sha;
       return container;
     });
 
-    let markdownContent = '';
+    let markdownContent = 'Commit Notes';
 
     commits.forEach((commit) => {
       markdownContent += `
-      ## Commit Details
-  
-      - Commit Message: ${commit.message}
-      - Committer: ${commit.committerName}
-      - Commit Date: ${commit.commitDate}
-      - SHA: ${commit.commitSha}
+      - ${getDate(commit.commitDate)}|${commit.commitSha.slice(0,6)}|${commit.message}[${commit.committerEmail}]
       `;;
     });
     return markdownContent;
@@ -48,6 +44,11 @@ function getPRNumber(){
   const match = githubRef.match(pullRequestRegex);
   const pullNumber = match ? match[1] : null;
   return pullNumber;
+}
+
+function getDate(dateTime){
+    let date = dateTime.toJSON();
+    return(date.slice(0,10));
 }
 
 const owner = process.env.GITHUB_REPOSITORY.split("/")[0];
