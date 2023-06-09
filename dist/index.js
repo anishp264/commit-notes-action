@@ -10759,7 +10759,8 @@ async function fetchCommitNotes(owner, repo, pullRequestNumber){
       markdownContent += `
       - ${commit.commitDate} | ${commit.commitSha.slice(0,6)} | ${commit.message} [${commit.committerEmail}]`;
     });
-    markdownContent += '---';
+    markdownContent += `
+    ---`;
     return markdownContent;
   } catch (error) {
     console.setFailed('Error retrieving commit messages:', error);
