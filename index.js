@@ -88,7 +88,10 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
     
     commits.forEach((commit) => {
       markdownContent += `
-      - ${commit.commitDate} | ${commit.commitSha.slice(0,6)} | ${commit.message} [${commit.committerEmail}]`;
+      - Commit Date: ${commit.commitDate} 
+      - Commit SHA: ${commit.commitSha.slice(0,6)}
+      - Commit Message: ${commit.message}
+      - Commit Email: [${commit.committerEmail}]`;
     });
     markdownContent += `
     ${commits.length}
