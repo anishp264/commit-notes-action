@@ -87,10 +87,15 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
     # Commit Notes`;
     
     commits.forEach((commit) => {
+      let message  = commit.message;
+      if(commit.committerName == "Github")
+      {
+        message = message.split("\n\n")[1];
+      }
       markdownContent += `
       - Commit Date: ${commit.commitDate} 
       - Commit SHA: ${commit.commitSha}
-      - Commit Message: ${commit.message}
+      - Commit Message: ${message}
       - Commit Email: [${commit.committerEmail}]`;
     });
     markdownContent += `
