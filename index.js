@@ -24,59 +24,9 @@ async function fetchCommitNotes(owner, repo, pullRequestNumber){
       pull_number: pullRequestNumber
     });
 
-    const commits = response.data.map(commit => {
-      const container = {};
-      container.message = commit.commit.message;
-      container.committerName = commit.commit.committer.name;
-      container.committerEmail = commit.commit.committer.email;
-      container.commitDate = commit.commit.committer.date;
-      container.commitSha = commit.sha;
-      return container;
-    });
-
-    let markdownContent = `# Merge Notes
-    ## ${prResponse.data.title}
-    ${prResponse.data.body}
-    ---
-    # Commit Notes`;
-    
-    commits.forEach((commit) => {
-      markdownContent += `
-      - ${commit.commitDate} | ${commit.commitSha.slice(0,6)} | ${commit.message} [${commit.committerEmail}]`;
-    });
-    markdownContent += `
-    ---`;
-    return markdownContent;
-  } catch (error) {
-    console.setFailed('Error retrieving commit messages:', error);
-    return [];
-  }
-}
-
-//This function fetches the commit notes
-async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
-  const octokit = new Octokit({
-    auth: process.env.GITHUB_TOKEN 
-  });
-
-  try {
-
-    const prResponse = await octokit.pulls.get({
-        owner: owner,
-        repo: repo,
-        pull_number: pullRequestNumber,
-      });
-
-    const response = await octokit.pulls.listCommits({
-      owner,
-      repo,
-      pull_number: pullRequestNumber
-    });
-
     const mergeNotes = [];
-    const prTitle = prResponse.data.title;
-    if(isStringInputValid(prTitle)){
-      mergeNotes.push(prTitle);
+    if(isStringInputValid(prResponse.data.title)){
+      mergeNotes.push(prResponse.data.title);
     }
 
     const commits = response.data.map(commit => {
@@ -137,11 +87,6 @@ function getPRNumber(){
   return pullNumber;
 }
 
-function getDate(dateTime){
-    let date = dateTime.toJSON();
-    return(date.slice(0,10));
-}
-
 function isStringInputValid(stringInput){
   return (!stringInput || stringInput.trim() === "") ? false : true;
 }
@@ -150,15 +95,7 @@ const owner = process.env.GITHUB_REPOSITORY.split("/")[0];
 const repo = process.env.GITHUB_REPOSITORY.split("/")[1];
 const pullNumber = getPRNumber();
 
-/*fetchCommitNotes(owner, repo, pullNumber)
-  .then(commitNotes => {
-    core.setOutput("commit-notes-md", commitNotes)
-  })
-  .catch(error => {
-    console.error('Error:', error);
-});*/
-
-fetchCommitNotesV1(owner, repo, pullNumber)
+fetchCommitNotes(owner, repo, pullNumber)
   .then(commitNotes => {
     core.setOutput("commit-notes-md", commitNotes)
   })
