@@ -98,6 +98,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       - Commit Date: ${commit.commitDate} 
       - Commit SHA: ${commit.commitSha}
       - Commit Message: ${message}
+      - Committer Name: ${commit.committerName}
       - Commit Email: [${commit.committerEmail}]`;
     });
     markdownContent += `
