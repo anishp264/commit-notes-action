@@ -81,10 +81,10 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       let message = commit.commit.message;
       if(container.committerName == "Github")
       {
-        const inputString  = message;
-        const parts = inputString.split("\n\n");
-        container.message = parts[1];
         container.commitType = "PR";
+        const inputString  = message;
+        const parts = inputString.split("-pr\n\n");
+        container.message = parts[1];
       }
       return container;
     });
