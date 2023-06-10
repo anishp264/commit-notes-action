@@ -1,6 +1,9 @@
 const core = require('@actions/core');
 const { Octokit } = require('@octokit/rest');
 
+const commitText = "Commit";
+const prText = "PR";
+
 //This function fetches the commit notes
 async function fetchCommitNotes(owner, repo, pullRequestNumber){
   const octokit = new Octokit({
@@ -70,6 +73,12 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       pull_number: pullRequestNumber
     });
 
+    const mergeNotes = [];
+
+    if(isStringInputValid(prResponse.data.title)){
+      mergeNotes.push(prResponse.data.title);
+    }
+
     const commits = response.data.map(commit => {
       const container = {};
       container.message = commit.commit.message;
@@ -77,36 +86,43 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       container.committerEmail = commit.commit.committer.email;
       container.commitDate = commit.commit.committer.date;
       container.commitSha = commit.sha;
-      container.commitType = "COMMIT";
-      let message = commit.commit.message;
+      container.commitType = commitText;
       if(container.committerName.toLowerCase() === "github")
       {
-        container.commitType = "PR";
-        const inputString  = message;
-        const parts = inputString.split("-pr\n\n");
-        container.message = parts[1];
+        container.commitType = prText;
+        if(isStringInputValid(commit.commit.message)){
+          const parts = commit.commit.message.split("-pr\n\n");
+          container.message = parts[1];
+        }        
       }
       return container;
     });
 
-    let markdownContent = `# Merge Notes
-    ## ${prResponse.data.title}
-    ${prResponse.data.body}
-    ---
-    # Commit Notes`;
+    let markdownContent = `# Merge Notes`;
+
+    let commitMarkDownContent = ``;
     
     commits.forEach((commit) => {
-      markdownContent += `
-      - Commit Date: ${commit.commitDate} 
-      - Commit SHA: ${commit.commitSha}
-      - Commit Message: ${commit.message}
-      - Committer Name: ${commit.committerName}
-      - Commit Email: [${commit.committerEmail}]
-      - Commit Type: ${commit.commitType}`;
+      if(commit.commitType == commitText){
+        markdownContent += `
+        - ${commit.commitDate} | ${commit.commitSha.slice(0,6)} | ${commit.message} [${commit.committerEmail}]`;
+      }
+      else{
+        mergeNotes.push(commit.message);
+      }
     });
+
+    mergeNotes.forEach((mergeNote) => {
+      markdownContent += `
+      ## ${mergeNote}`;
+    });
+
     markdownContent += `
-    ${commits.length}
+    ---
+    # Commit Notes
+    ${commitMarkDownContent}
     ---`;
+
     return markdownContent;
   } catch (error) {
     console.setFailed('Error retrieving commit messages:', error);
@@ -125,6 +141,10 @@ function getPRNumber(){
 function getDate(dateTime){
     let date = dateTime.toJSON();
     return(date.slice(0,10));
+}
+
+function isStringInputValid(stringInput){
+  return (!stringInput || stringInput.trim() === "") ? true : false;
 }
 
 const owner = process.env.GITHUB_REPOSITORY.split("/")[0];
