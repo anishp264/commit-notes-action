@@ -10822,8 +10822,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
     
     commits.forEach((commit) => {
       if(commit.commitType == commitText){
-        commitMarkDownContent += `
-        - ${commit.commitDate} | ${commit.commitSha.slice(0,6)} | ${commit.message} [${commit.committerEmail}]`;
+        commitMarkDownContent += `- ${commit.commitDate} | ${commit.commitSha.slice(0,6)} | ${commit.message} [${commit.committerEmail}]`;
       }
       else{
         mergeNotes.push(commit.message);
