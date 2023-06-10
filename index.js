@@ -74,9 +74,9 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
     });
 
     const mergeNotes = [];
-
-    if(isStringInputValid(prResponse.data.title)){
-      mergeNotes.push(prResponse.data.title);
+    const prTitle = prResponse.data.title;
+    if(isStringInputValid(prTitle)){
+      mergeNotes.push(prTitle);
     }
 
     const commits = response.data.map(commit => {
