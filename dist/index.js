@@ -10797,7 +10797,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       container.commitSha = commit.sha;
       container.commitType = "COMMIT";
       let message = commit.commit.message;
-      if(container.committerName == "Github")
+      if(container.committerName == "GitHub")
       {
         container.commitType = "PR";
         const inputString  = message;
