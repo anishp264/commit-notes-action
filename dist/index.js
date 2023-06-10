@@ -10862,7 +10862,7 @@ function getDate(dateTime){
 }
 
 function isStringInputValid(stringInput){
-  return (!stringInput || stringInput.trim() === "") ? true : false;
+  return (!stringInput || stringInput.trim() === "") ? false : true;
 }
 
 const owner = process.env.GITHUB_REPOSITORY.split("/")[0];
