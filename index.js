@@ -77,6 +77,15 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       container.committerEmail = commit.commit.committer.email;
       container.commitDate = commit.commit.committer.date;
       container.commitSha = commit.sha;
+      container.commitType = "COMMIT";
+      let message = commit.commit.message;
+      if(container.committerName == "Github")
+      {
+        const inputString  = message;
+        const parts = inputString.split("\n\n");
+        container.message = parts[1];
+        container.commitType = "PR";
+      }
       return container;
     });
 
@@ -87,19 +96,14 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
     # Commit Notes`;
     
     commits.forEach((commit) => {
-      let message = commit.message;
-      if(commit.committerName == "Github")
-      {
-        const inputString  = commit.message;
-        const parts = inputString.split("\n\n");
-        message = parts[1];
-      }
+      
       markdownContent += `
       - Commit Date: ${commit.commitDate} 
       - Commit SHA: ${commit.commitSha}
-      - Commit Message: ${message}
+      - Commit Message: ${commit.message}
       - Committer Name: ${commit.committerName}
-      - Commit Email: [${commit.committerEmail}]`;
+      - Commit Email: [${commit.committerEmail}]
+      - Commit Type: ${commit.commitType}`;
     });
     markdownContent += `
     ${commits.length}
