@@ -10759,8 +10759,6 @@ async function fetchCommitNotes(owner, repo, pullRequestNumber){
       {
         container.commitType = prText;
         if(isStringInputValid(commit.commit.message)){
-          /*const parts = commit.commit.message.split("-pr\n\n");
-          container.message = parts[1];*/
           container.message = commit.commit.message.split("-pr\n\n")[1];
         }        
       }
