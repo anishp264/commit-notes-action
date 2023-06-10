@@ -10818,11 +10818,12 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
 
     let markdownContent = `# Merge Notes`;
 
-    let commitMarkDownContent = ``;
+    let commitMarkDownContent = `# Commit Notes`;
     
     commits.forEach((commit) => {
       if(commit.commitType == commitText){
-        commitMarkDownContent += `- ${commit.commitDate} | ${commit.commitSha.slice(0,6)} | ${commit.message} [${commit.committerEmail}]`;
+        commitMarkDownContent += `
+        - ${commit.commitDate} | ${commit.commitSha.slice(0,6)} | ${commit.message} [${commit.committerEmail}]`;
       }
       else{
         mergeNotes.push(commit.message);
@@ -10836,7 +10837,6 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
 
     markdownContent += `
     ---
-    # Commit Notes
     ${commitMarkDownContent}
     ---`;
 
