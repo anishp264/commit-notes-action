@@ -162,10 +162,25 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       }
     });  
 
-    prNumbers.forEach((prNumber) => {
-      markdownContent += `
-      ${prNumber}`;
-    })
+    const forLoop = async _ => {
+      for (let index = 0; index < prNumbers.length; index++) {
+        const prNumber = prNumbers[index];
+        const prResponse1 = await octokit.pulls.get({
+          owner: owner,
+          repo: repo,
+          pull_number: prNumber
+        });
+    
+        if(isStringInputValid(prResponse1.data.title)){
+          markdownContent += `
+          ## ${prResponse1.data.title}`;
+        }
+        if(isStringInputValid(prResponse1.data.body)){
+          markdownContent += `
+          ${prResponse1.data.body}`;
+        }
+      }
+    }
 
 
     /*const prResponse1 = await octokit.pulls.get({
