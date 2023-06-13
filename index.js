@@ -117,19 +117,19 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       ${prResponse.data.body}`;
     }
 
-    prResponse = await octokit.pulls.get({
+    const prResponse1 = await octokit.pulls.get({
       owner: owner,
       repo: repo,
       pull_number: 35,
     });
 
-    if(isStringInputValid(prResponse.data.title)){
+    if(isStringInputValid(prResponse1.data.title)){
       markdownContent += `
-      ## ${prResponse.data.title}`;
+      ## ${prResponse1.data.title}`;
     }
-    if(isStringInputValid(prResponse.data.body)){
+    if(isStringInputValid(prResponse1.data.body)){
       markdownContent += `
-      ${prResponse.data.body}`;
+      ${prResponse1.data.body}`;
     }
     /*markdownContent += `
     ${prResponse.data.number}`;*/
