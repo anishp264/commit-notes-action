@@ -10873,9 +10873,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       }
       else{
         if(isStringInputValid(commit.message)){
-          const prNumber = getPRNumberFromCommitNote(commit.message);
-          markdownContent += `
-          PR NUMBER => ${prNumber}`;
+          const prNumber = getPRNumberFromCommitNote(commit.message);          
           prNumbers.push(prNumber);      
         }
       }
@@ -10888,6 +10886,8 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
         repo,
         pull_number: prNumber
       });
+      markdownContent += `
+          PR NUMBER: => ${prNumber}`;
       mergeNote.title = response.data.title;
       mergeNote.body = response.data.body;
       //getMergeNote(octokit, prNumber);
