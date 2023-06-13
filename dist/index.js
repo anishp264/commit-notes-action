@@ -10881,8 +10881,8 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
 
     (async() => {
       for (const prNumber in prNumbers){
-        let mergeNote = {};
-        const response = await octokit.pulls.get({
+        //let mergeNote = {};
+        /*const response = await octokit.pulls.get({
           owner: owner,
           repo: repo,
           pull_number: 35,
@@ -10894,7 +10894,17 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
         if(isStringInputValid(response.data.bodyy)){
           markdownContent += `
           ${response.data.body}`;
-        }
+        }*/
+        getMergeNote(octokit, 35)
+        .then(mergeNote => {
+          markdownContent += `
+          ## ${mergeNote.title}`;
+          markdownContent += `
+          ${mergeNote.body}`;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
         /*markdownContent += `
             PR NUMBER: => ${prNumber}`;
         mergeNote.title = response.data.title;
@@ -10918,7 +10928,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       mergeNotes.push(mergeNote);
     })*/
 
-    mergeNotes.forEach((mergeNote) => {
+    /*mergeNotes.forEach((mergeNote) => {
       if(isStringInputValid(mergeNote.title)){
         markdownContent += `
         ## ${mergeNote.title}`;
@@ -10928,8 +10938,8 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
         ${mergeNote.body}`;
       }
       /*markdownContent += `
-      ## ${mergeNote}`;*/
-    });
+      ## ${mergeNote}`;
+    });*/
 
     markdownContent += `
     ---
