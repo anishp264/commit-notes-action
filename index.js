@@ -130,8 +130,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
         if(isStringInputValid(commit.commit.message)){
           container.message = commit.commit.message.split("-pr\n\n")[1];
           container.message += `
-          ${commit.sha}
-          ${getPRNumberFromCommitNote(commit.commit.message)}`;
+          ${commit.sha}`;
         }                
       }
       else{
