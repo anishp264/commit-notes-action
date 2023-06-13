@@ -103,6 +103,20 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       pull_number: pullRequestNumber
     });
 
+    const prListResponse = await octokit.pulls.list({
+      owner: owner,
+      repo: repo,
+    });
+
+    // Extract the pull request data from the response
+    const pullRequests = prListResponse.data.map((pr) => {
+      return {
+        number: pr.number,
+        title: pr.title,
+        body: pr.body,
+      };
+    });
+
     const mergeNotes = [];
     const prNumbers = [];
     //const mergeNote = {};
@@ -117,8 +131,6 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       ${prResponse.data.body}`;
     }
 
-    /*markdownContent += `
-    ${prResponse.data.number}`;*/
     const commits = response.data.map(commit => {
       const container = {};
       container.message = commit.commit.message;
@@ -129,15 +141,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       container.commitType = commitText;
       if(container.committerName.toLowerCase() === "github")
       {
-        container.commitType = prText;
-        /*if(isStringInputValid(commit.commit.message)){
-          const prNumber = getPRNumberFromCommitNote(commit.commit.message);
-          container.message = commit.commit.message.split("-pr\n\n")[1];
-          container.message += `
-          ${commit.sha}
-          ${prNumber}`;
-          getMergeNote(prNumber);
-        }*/                
+        container.commitType = prText;             
       }
       else{
         if(commit.commit.message.includes("\n\n")){
@@ -157,131 +161,19 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       else{
         if(isStringInputValid(commit.message)){
           const prNumber = getPRNumberFromCommitNote(commit.message);          
-          prNumbers.push(prNumber);      
+          const pullRequest = pullRequests.filter(pr => pr.number === prNumber);
+          if(isStringInputValid(pullRequest.title)){
+            markdownContent += `
+            ## ${pullRequest.title}`;
+          }
+          if(isStringInputValid(pullRequest.body)){
+            markdownContent += `
+            ${pullRequest.body}`;
+          }
         }
       }
     });  
-
-    const forLoop = async _ => {
-      markdownContent += `
-          ## inside for loop`;
-      for (let index = 0; index < prNumbers.length; index++) {
-        const prNumber = prNumbers[index];
-        const prResponse1 = await octokit.pulls.get({
-          owner: owner,
-          repo: repo,
-          pull_number: prNumber
-        });
     
-        if(isStringInputValid(prResponse1.data.title)){
-          markdownContent += `
-          ## ${prResponse1.data.title}`;
-        }
-        if(isStringInputValid(prResponse1.data.body)){
-          markdownContent += `
-          ${prResponse1.data.body}`;
-        }
-      }
-    }
-
-    forLoop();
-
-    /*const prResponse1 = await octokit.pulls.get({
-      owner: owner,
-      repo: repo,
-      pull_number: prNumber
-    });
-
-    if(isStringInputValid(prResponse1.data.title)){
-      markdownContent += `
-      ## ${prResponse1.data.title}`;
-    }
-    if(isStringInputValid(prResponse1.data.body)){
-      markdownContent += `
-      ${prResponse1.data.body}`;
-    }*/
-
-    /*for (const prNumber in prNumbers){
-      const prResponse1 = await octokit.pulls.get({
-        owner: owner,
-        repo: repo,
-        pull_number: prNumber
-      });
-  
-      if(isStringInputValid(prResponse1.data.title)){
-        markdownContent += `
-        ## ${prResponse1.data.title}`;
-      }
-      if(isStringInputValid(prResponse1.data.body)){
-        markdownContent += `
-        ${prResponse1.data.body}`;
-      }
-    }*/
-
-    /*getMergeNote(octokit, 35)
-    .then(mergeNote => {
-      markdownContent += `
-      ## ${mergeNote.title}`;
-      markdownContent += `
-      ${mergeNote.body}`;
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });*/
-
-    /*(async() => {
-      for (const prNumber in prNumbers){
-        //let mergeNote = {};
-        /*const response = await octokit.pulls.get({
-          owner: owner,
-          repo: repo,
-          pull_number: 35,
-        });
-        if(isStringInputValid(response.data.title)){
-          markdownContent += `
-          ## ${response.data.title}`;
-        }
-        if(isStringInputValid(response.data.bodyy)){
-          markdownContent += `
-          ${response.data.body}`;
-        }
-
-        /*markdownContent += `
-            PR NUMBER: => ${prNumber}`;
-        mergeNote.title = response.data.title;
-        mergeNote.body = response.data.body;
-        //getMergeNote(octokit, prNumber);
-        mergeNotes.push(mergeNote);
-      }
-    })()*/
-
-
-    /*prNumbers.forEach(async(prNumber) => {
-      let mergeNote = {};
-      const response = await octokit.pulls.listCommits({
-        owner,
-        repo,
-        pull_number: prNumber
-      });
-      mergeNote.title = response.data.title;
-      mergeNote.body = response.data.body;
-      //getMergeNote(octokit, prNumber);
-      mergeNotes.push(mergeNote);
-    })*/
-
-    /*mergeNotes.forEach((mergeNote) => {
-      if(isStringInputValid(mergeNote.title)){
-        markdownContent += `
-        ## ${mergeNote.title}`;
-      }
-      if(isStringInputValid(mergeNote.body)){
-        markdownContent += `
-        ${mergeNote.body}`;
-      }
-      /*markdownContent += `
-      ## ${mergeNote}`;
-    });*/
-
     markdownContent += `
     ---
     ${commitMarkDownContent}
