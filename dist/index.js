@@ -10879,20 +10879,24 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       }
     });
 
-    for (const prNumber in prNumbers){
-      let mergeNote = {};
-      const response = await octokit.pulls.listCommits({
-        owner,
-        repo,
-        pull_number: prNumber
-      });
-      markdownContent += `
-          PR NUMBER: => ${prNumber}`;
-      mergeNote.title = response.data.title;
-      mergeNote.body = response.data.body;
-      //getMergeNote(octokit, prNumber);
-      mergeNotes.push(mergeNote);
-    }
+    (async() => {
+      for (const prNumber in prNumbers){
+        let mergeNote = {};
+        const response = await octokit.pulls.listCommits({
+          owner,
+          repo,
+          pull_number: prNumber
+        });
+        markdownContent += `
+            PR NUMBER: => ${prNumber}`;
+        mergeNote.title = response.data.title;
+        mergeNote.body = response.data.body;
+        //getMergeNote(octokit, prNumber);
+        mergeNotes.push(mergeNote);
+      }
+    })()
+
+
     /*prNumbers.forEach(async(prNumber) => {
       let mergeNote = {};
       const response = await octokit.pulls.listCommits({
