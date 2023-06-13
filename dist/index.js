@@ -10849,9 +10849,10 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
           const prNumber = getPRNumberFromCommitNote(commit.commit.message);
           container.message = commit.commit.message.split("-pr\n\n")[1];
           container.message += `
-          ${commit.sha}`;
-          container.message += `
+          ${commit.sha}
           ${prNumber}`;
+          /*container.message += `
+          ${prNumber}`;*/
         }                
       }
       else{
@@ -10903,7 +10904,6 @@ function getPRNumberFromCommitNote(commitNote){
   const regex = /#(\w+)/;
   const match = commitNote.match(regex);
   const prNumber = match ? match[1] : null;
-  //match && match[1];
   return prNumber;
 }
 
