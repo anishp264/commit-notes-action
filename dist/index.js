@@ -10878,22 +10878,23 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
           prNumbers.push(prNumber);      
         }
       }
-    });
+    });  
 
-    
-    const prResponse1 = await octokit.pulls.get({
-      owner: owner,
-      repo: repo,
-      pull_number: 35,
-    });
-
-    if(isStringInputValid(prResponse1.data.title)){
-      markdownContent += `
-      ## ${prResponse1.data.title}`;
-    }
-    if(isStringInputValid(prResponse1.data.body)){
-      markdownContent += `
-      ${prResponse1.data.body}`;
+    for (const prNumber in prNumbers){
+      const prResponse1 = await octokit.pulls.get({
+        owner: owner,
+        repo: repo,
+        pull_number: 35,
+      });
+  
+      if(isStringInputValid(prResponse1.data.title)){
+        markdownContent += `
+        ## ${prResponse1.data.title}`;
+      }
+      if(isStringInputValid(prResponse1.data.body)){
+        markdownContent += `
+        ${prResponse1.data.body}`;
+      }
     }
 
     /*getMergeNote(octokit, 35)
