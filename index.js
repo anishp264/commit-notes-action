@@ -166,7 +166,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       const prResponse1 = await octokit.pulls.get({
         owner: owner,
         repo: repo,
-        pull_number: prNumber
+        pull_number: parseInt(prNumber)
       });
   
       if(isStringInputValid(prResponse1.data.title)){
