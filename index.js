@@ -153,14 +153,18 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
           getMergeNote(octokit, prNumber)
           .then(pullRequest => {
             console.log(pullRequest);
-            if(isStringInputValid(pullRequest.title)){
+            markdownContent += `
+              ## ${pullRequest.title}`;
+            markdownContent += `
+              ${pullRequest.body}`;
+            /*if(isStringInputValid(pullRequest.title)){
               markdownContent += `
               ## ${pullRequest.title}`;
             }
             if(isStringInputValid(pullRequest.body)){
               markdownContent += `
               ${pullRequest.body}`;
-            }
+            }*/
           })
           .catch(error => {
             console.error('Error:', error);
@@ -256,7 +260,6 @@ async function getMergeNote(octokit, prNumber){
       pull_number: prNumber,
     });
     const mergeNote = {};
-    console.log(response);
     mergeNote.title = response.data.title;
     mergeNote.body = response.data.body;
     return mergeNote;
