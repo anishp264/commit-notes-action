@@ -10873,8 +10873,8 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       else{
         if(isStringInputValid(commit.message)){
           const prNumber = getPRNumberFromCommitNote(commit.message);
-          const prNote = await getMergeNote(octokit, prNumber);
-          mergeNotes.push(prNote);
+          const mergeNote = await getMergeNote(octokit, prNumber);
+          mergeNotes.push(mergeNote);
           //mergeNotes.push(getMergeNote(octokit, prNumber));
           //mergeNotes.push(getMergeNote(octokit, prNumber));
           /*container.message = commit.commit.message.split("-pr\n\n")[1];
@@ -10886,14 +10886,14 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       }
     });
 
-    mergeNotes.forEach((mergeVal) => {
-      if(isStringInputValid(mergeVal.title)){
+    mergeNotes.forEach((mergeNote) => {
+      if(isStringInputValid(mergeNote.title)){
         markdownContent += `
-        ## ${mergeVal.title}`;
+        ## ${mergeNote.title}`;
       }
-      if(isStringInputValid(mergeVal.body)){
+      if(isStringInputValid(mergeNote.body)){
         markdownContent += `
-        ${mergeVal.body}`;
+        ${mergeNote.body}`;
       }
       /*markdownContent += `
       ## ${mergeNote}`;*/
