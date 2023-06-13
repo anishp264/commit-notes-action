@@ -115,8 +115,8 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       markdownContent += `
       ${prResponse.data.body}`;
     }
-    markdownContent += `
-    ${prResponse.data.number}`;
+    /*markdownContent += `
+    ${prResponse.data.number}`;*/
     const commits = response.data.map(commit => {
       const container = {};
       container.message = commit.commit.message;
