@@ -130,8 +130,9 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
         if(isStringInputValid(commit.commit.message)){
           container.message = commit.commit.message.split("-pr\n\n")[1];
           container.message += `
-          ${commit.sha}`;
-        }        
+          ${commit.sha}
+          ${getPRNumberFromCommitNote(commit.commit.message)}`;
+        }                
       }
       else{
         if(commit.commit.message.includes("\n\n")){
@@ -176,6 +177,12 @@ function getPRNumber(){
   const match = githubRef.match(pullRequestRegex);
   const pullNumber = match ? match[1] : null;
   return pullNumber;
+}
+
+function getPRNumberFromCommitNote(commitNote){
+  const regex = /#(\w+)/;
+  const match = sentence.match(regex);
+  return match && match[1];
 }
 
 function isStringInputValid(stringInput){
