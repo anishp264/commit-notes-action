@@ -148,17 +148,23 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       else{
         if(isStringInputValid(commit.message)){
           const prNumber = getPRNumberFromCommitNote(commit.message);          
-          const pullRequest = getMergeNote(octokit, prNumber);
-          console.log(pullRequest);
-          /*pullRequests.filter(pr => pr.number === prNumber);*/
-          if(isStringInputValid(pullRequest.title)){
+          /*const pullRequest = getMergeNote(octokit, prNumber);
+          console.log(pullRequest);*/
+          getMergeNote(octokit, prNumber)
+          .then(pullRequest => {
+            console.log(pullRequest);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+          /*if(isStringInputValid(pullRequest.title)){
             markdownContent += `
             ## ${pullRequest.title}`;
           }
           if(isStringInputValid(pullRequest.body)){
             markdownContent += `
             ${pullRequest.body}`;
-          }
+          }*/
         }
       }
     });  
