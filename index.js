@@ -166,7 +166,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       const prResponse1 = await octokit.pulls.get({
         owner: owner,
         repo: repo,
-        pull_number: parseInt(prNumber)
+        pull_number: 35
       });
   
       if(isStringInputValid(prResponse1.data.title)){
@@ -250,7 +250,8 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
 
     return markdownContent;
   } catch (error) {
-    console.setFailed('Error retrieving commit messages:', error);
+    //console.setFailed('Error retrieving commit messages:', error);
+    console.error('Error:', error);
     return [];
   }
 }
