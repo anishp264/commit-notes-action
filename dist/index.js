@@ -10902,6 +10902,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       }
     }
 
+    forLoop();
 
     /*const prResponse1 = await octokit.pulls.get({
       owner: owner,
