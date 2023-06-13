@@ -10822,6 +10822,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
     });
 
     const mergeNotes = [];
+    const prNumbers = [];
     //const mergeNote = {};
 
     let markdownContent = `# Merge Notes`;
@@ -10865,7 +10866,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
 
     let commitMarkDownContent = `# Commit Notes`;
     
-    commits.forEach(async (commit) => {
+    commits.forEach((commit) => {
       if(commit.commitType == commitText){
         commitMarkDownContent += `
         - ${commit.commitDate} | ${commit.commitSha} | ${commit.message} [${commit.committerEmail}]`;
@@ -10873,8 +10874,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       else{
         if(isStringInputValid(commit.message)){
           const prNumber = getPRNumberFromCommitNote(commit.message);
-          const mergeNote = await getMergeNote(octokit, prNumber);
-          mergeNotes.push(mergeNote);
+          prNumbers.push(prNumber);          
           //mergeNotes.push(getMergeNote(octokit, prNumber));
           //mergeNotes.push(getMergeNote(octokit, prNumber));
           /*container.message = commit.commit.message.split("-pr\n\n")[1];
@@ -10885,6 +10885,11 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
         //mergeNotes.push(commit.message);
       }
     });
+
+    prNumbers.forEach(async(prNumber) => {
+      const mergeNote = await getMergeNote(octokit, prNumber);
+      mergeNotes.push(mergeNote);
+    })
 
     mergeNotes.forEach((mergeNote) => {
       if(isStringInputValid(mergeNote.title)){
