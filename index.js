@@ -164,10 +164,10 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
     (async() => {
       for (const prNumber in prNumbers){
         let mergeNote = {};
-        const response = await octokit.pulls.listCommits({
-          owner,
-          repo,
-          pull_number: prNumber
+        const response = await octokit.pulls.get({
+          owner: owner,
+          repo: repo,
+          pull_number: prNumber,
         });
         markdownContent += `
             PR NUMBER: => ${prNumber}`;
