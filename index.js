@@ -163,7 +163,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       }
     });
 
-    prNumbers.forEach(async(prNumber) => {
+    for (const prNumber in prNumbers){
       let mergeNote = {};
       const response = await octokit.pulls.listCommits({
         owner,
@@ -174,7 +174,19 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       mergeNote.body = response.data.body;
       //getMergeNote(octokit, prNumber);
       mergeNotes.push(mergeNote);
-    })
+    }
+    /*prNumbers.forEach(async(prNumber) => {
+      let mergeNote = {};
+      const response = await octokit.pulls.listCommits({
+        owner,
+        repo,
+        pull_number: prNumber
+      });
+      mergeNote.title = response.data.title;
+      mergeNote.body = response.data.body;
+      //getMergeNote(octokit, prNumber);
+      mergeNotes.push(mergeNote);
+    })*/
 
     mergeNotes.forEach((mergeNote) => {
       if(isStringInputValid(mergeNote.title)){
