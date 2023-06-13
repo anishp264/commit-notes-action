@@ -10835,6 +10835,8 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       return pullRequest;
     });
 
+    console.log(pullRequests);
+
     const mergeNotes = [];
     const prNumbers = [];
     //const mergeNote = {};
