@@ -10900,6 +10900,8 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       }
     });  
 
+    console.log(mergeNotes.length());
+
     mergeNotes.forEach((pullRequest) => {
       markdownContent += `
       ## ${pullRequest.title}
