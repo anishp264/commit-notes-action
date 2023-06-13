@@ -10875,23 +10875,31 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       else{
         if(isStringInputValid(commit.message)){
           const prNumber = getPRNumberFromCommitNote(commit.message);          
-          const prResponse1 = await octokit.pulls.get({
-            owner: owner,
-            repo: repo,
-            pull_number: prNumber
-          });
-      
-          if(isStringInputValid(prResponse1.data.title)){
-            markdownContent += `
-            ## ${prResponse1.data.title}`;
-          }
-          if(isStringInputValid(prResponse1.data.body)){
-            markdownContent += `
-            ${prResponse1.data.body}`;
-          }      
+          prNumbers.push(prNumber);      
         }
       }
     });  
+
+    prNumbers.forEach((prNumber) => {
+      markdownContent += `
+      ${prNumber}`;
+    })
+
+
+    /*const prResponse1 = await octokit.pulls.get({
+      owner: owner,
+      repo: repo,
+      pull_number: prNumber
+    });
+
+    if(isStringInputValid(prResponse1.data.title)){
+      markdownContent += `
+      ## ${prResponse1.data.title}`;
+    }
+    if(isStringInputValid(prResponse1.data.body)){
+      markdownContent += `
+      ${prResponse1.data.body}`;
+    }*/
 
     /*for (const prNumber in prNumbers){
       const prResponse1 = await octokit.pulls.get({
