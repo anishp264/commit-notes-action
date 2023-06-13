@@ -153,10 +153,11 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
           getMergeNote(octokit, prNumber)
           .then(pullRequest => {
             console.log(pullRequest);
-            markdownContent += `
+            mergeNotes.push(pullRequest);
+            /*markdownContent += `
               ## ${pullRequest.title}`;
             markdownContent += `
-              ${pullRequest.body}`;
+              ${pullRequest.body}`;*/
             /*if(isStringInputValid(pullRequest.title)){
               markdownContent += `
               ## ${pullRequest.title}`;
@@ -180,6 +181,12 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
         }
       }
     });  
+
+    mergeNotes.forEach((pullRequest) => {
+      markdownContent += `
+      ## ${pullRequest.title}
+      ${pullRequest.body}`;
+    });
 
     markdownContent += `
     ---
