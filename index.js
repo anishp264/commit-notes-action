@@ -117,6 +117,8 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       };
     });
 
+    console.log(pullRequests.length);
+
     const mergeNotes = [];
     const prNumbers = [];
     //const mergeNote = {};
@@ -160,6 +162,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       }
       else{
         if(isStringInputValid(commit.message)){
+          console.log("Setting PR");
           const prNumber = getPRNumberFromCommitNote(commit.message);          
           const pullRequest = pullRequests.filter(pr => pr.number === prNumber);
           if(isStringInputValid(pullRequest.title)){
@@ -173,7 +176,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
         }
       }
     });  
-    
+
     markdownContent += `
     ---
     ${commitMarkDownContent}
