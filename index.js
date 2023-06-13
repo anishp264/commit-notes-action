@@ -110,14 +110,12 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
 
     // Extract the pull request data from the response
     const pullRequests = prListResponse.data.map((pr) => {
-      return {
-        number: pr.number,
-        title: pr.title,
-        body: pr.body,
-      };
+      const pullRequest = {};
+      pullRequest.number = pr.number;
+      pullRequest.title = pr.title;
+      pullRequest.body = pr.body;
+      return pullRequest;
     });
-
-    console.log(pullRequests.length);
 
     const mergeNotes = [];
     const prNumbers = [];
@@ -155,7 +153,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
 
     let commitMarkDownContent = `# Commit Notes`;
     
-    commits.forEach(async(commit) => {
+    commits.forEach((commit) => {
       if(commit.commitType == commitText){
         commitMarkDownContent += `
         - ${commit.commitDate} | ${commit.commitSha} | ${commit.message} [${commit.committerEmail}]`;
