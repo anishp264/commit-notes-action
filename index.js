@@ -167,7 +167,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
         const response = await octokit.pulls.get({
           owner: owner,
           repo: repo,
-          pull_number: prNumber,
+          pull_number: 35,
         });
         markdownContent += `
             PR NUMBER: => ${prNumber}`;
