@@ -44,6 +44,11 @@ async function fetchCommitNotes(owner, repo, pullRequestNumber){
           container.message = commit.commit.message.split("-pr\n\n")[1];
         }        
       }
+      else{
+        if(commit.commit.message.includes("\n\n")){
+          container.message = `${commit.commit.message.split("\n\n")[0]}   ${commit.commit.message.split("\n\n")[1]}`
+        }
+      }
       return container;
     });
 
