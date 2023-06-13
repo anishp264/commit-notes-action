@@ -10902,7 +10902,8 @@ function getPRNumber(){
 function getPRNumberFromCommitNote(commitNote){
   const regex = /#(\w+)/;
   const match = sentence.match(regex);
-  return match && match[1];
+  const prNumber = match && match[1];
+  return prNumber;
 }
 
 function isStringInputValid(stringInput){
