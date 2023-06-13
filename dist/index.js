@@ -10874,20 +10874,23 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       else{
         if(isStringInputValid(commit.message)){
           const prNumber = getPRNumberFromCommitNote(commit.message);
-          prNumbers.push(prNumber);          
-          //mergeNotes.push(getMergeNote(octokit, prNumber));
-          //mergeNotes.push(getMergeNote(octokit, prNumber));
-          /*container.message = commit.commit.message.split("-pr\n\n")[1];
-          container.message += `
-          ${commit.sha}
-          ${prNumber}`;*/
+          markdownContent += `
+          PR NUMBER => ${prNumber}`;
+          prNumbers.push(prNumber);      
         }
-        //mergeNotes.push(commit.message);
       }
     });
 
     prNumbers.forEach(async(prNumber) => {
-      const mergeNote = await getMergeNote(octokit, prNumber);
+      let mergeNote = {};
+      const response = await octokit.pulls.listCommits({
+        owner,
+        repo,
+        pull_number: prNumber
+      });
+      mergeNote.title = response.data.title;
+      mergeNote.body = response.data.body;
+      //getMergeNote(octokit, prNumber);
       mergeNotes.push(mergeNote);
     })
 
