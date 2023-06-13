@@ -10881,6 +10881,8 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
     });  
 
     const forLoop = async _ => {
+      markdownContent += `
+          ## inside for loop`;
       for (let index = 0; index < prNumbers.length; index++) {
         const prNumber = prNumbers[index];
         const prResponse1 = await octokit.pulls.get({
