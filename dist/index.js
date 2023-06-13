@@ -10867,7 +10867,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
 
     let commitMarkDownContent = `# Commit Notes`;
     
-    commits.forEach((commit) => {
+    commits.forEach(async(commit) => {
       if(commit.commitType == commitText){
         commitMarkDownContent += `
         - ${commit.commitDate} | ${commit.commitSha} | ${commit.message} [${commit.committerEmail}]`;
@@ -10875,12 +10875,25 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       else{
         if(isStringInputValid(commit.message)){
           const prNumber = getPRNumberFromCommitNote(commit.message);          
-          prNumbers.push(prNumber);      
+          const prResponse1 = await octokit.pulls.get({
+            owner: owner,
+            repo: repo,
+            pull_number: prNumber
+          });
+      
+          if(isStringInputValid(prResponse1.data.title)){
+            markdownContent += `
+            ## ${prResponse1.data.title}`;
+          }
+          if(isStringInputValid(prResponse1.data.body)){
+            markdownContent += `
+            ${prResponse1.data.body}`;
+          }      
         }
       }
     });  
 
-    for (const prNumber in prNumbers){
+    /*for (const prNumber in prNumbers){
       const prResponse1 = await octokit.pulls.get({
         owner: owner,
         repo: repo,
@@ -10895,7 +10908,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
         markdownContent += `
         ${prResponse1.data.body}`;
       }
-    }
+    }*/
 
     /*getMergeNote(octokit, 35)
     .then(mergeNote => {
