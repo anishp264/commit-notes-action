@@ -10873,15 +10873,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       else{
         if(isStringInputValid(commit.message)){
           const prNumber = getPRNumberFromCommitNote(commit.message);
-          getMergeNote(octokit, prNumber)
-          .then(mergeNote => {    
-            markdownContent += `
-            ***********************`;       
-            mergeNotes.push(mergeNote);
-          })
-          .catch(error => {
-            console.error('Error:', error);
-          });
+          mergeNotes.push(getMergeNote(octokit, prNumber));
           //mergeNotes.push(getMergeNote(octokit, prNumber));
           /*container.message = commit.commit.message.split("-pr\n\n")[1];
           container.message += `
