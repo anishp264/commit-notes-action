@@ -153,6 +153,14 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
           getMergeNote(octokit, prNumber)
           .then(pullRequest => {
             console.log(pullRequest);
+            if(isStringInputValid(pullRequest.title)){
+              markdownContent += `
+              ## ${pullRequest.title}`;
+            }
+            if(isStringInputValid(pullRequest.body)){
+              markdownContent += `
+              ${pullRequest.body}`;
+            }
           })
           .catch(error => {
             console.error('Error:', error);
