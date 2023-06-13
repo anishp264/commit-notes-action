@@ -10865,7 +10865,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
 
     let commitMarkDownContent = `# Commit Notes`;
     
-    commits.forEach((commit) => {
+    commits.forEach(async (commit) => {
       if(commit.commitType == commitText){
         commitMarkDownContent += `
         - ${commit.commitDate} | ${commit.commitSha} | ${commit.message} [${commit.committerEmail}]`;
@@ -10873,7 +10873,9 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       else{
         if(isStringInputValid(commit.message)){
           const prNumber = getPRNumberFromCommitNote(commit.message);
-          mergeNotes.push(getMergeNote(octokit, prNumber));
+          const prNote = await getMergeNote(octokit, prNumber);
+          mergeNotes.push(prNote);
+          //mergeNotes.push(getMergeNote(octokit, prNumber));
           //mergeNotes.push(getMergeNote(octokit, prNumber));
           /*container.message = commit.commit.message.split("-pr\n\n")[1];
           container.message += `
