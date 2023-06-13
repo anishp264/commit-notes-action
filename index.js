@@ -242,12 +242,13 @@ function isStringInputValid(stringInput){
 
 async function getMergeNote(octokit, prNumber){
   try{
-    const response = await octokit.pulls.listCommits({
-      owner,
-      repo,
-      pull_number: prNumber
+    const response = await octokit.pulls.get({
+      owner: owner,
+      repo: repo,
+      pull_number: prNumber,
     });
     const mergeNote = {};
+    console.log(response);
     mergeNote.title = response.data.title;
     mergeNote.body = response.data.body;
     return mergeNote;
