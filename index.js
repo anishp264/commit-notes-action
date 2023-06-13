@@ -164,7 +164,9 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
         if(isStringInputValid(commit.message)){
           console.log("Setting PR");
           const prNumber = getPRNumberFromCommitNote(commit.message);          
-          const pullRequest = pullRequests.filter(pr => pr.number === prNumber);
+          const pullRequest = getMergeNote(octokit, prNumber);
+
+          /*pullRequests.filter(pr => pr.number === prNumber);*/
           if(isStringInputValid(pullRequest.title)){
             markdownContent += `
             ## ${pullRequest.title}`;
@@ -269,18 +271,18 @@ const owner = process.env.GITHUB_REPOSITORY.split("/")[0];
 const repo = process.env.GITHUB_REPOSITORY.split("/")[1];
 const pullNumber = getPRNumber();
 
-/*fetchCommitNotesV1(owner, repo, pullNumber)
-  .then(commitNotes => {
-    core.setOutput("commit-notes-md", commitNotes)
-  })
-  .catch(error => {
-    console.error('Error:', error);
-});*/
-
-fetchCommitNotesV2(owner, repo)
+fetchCommitNotesV1(owner, repo, pullNumber)
   .then(commitNotes => {
     core.setOutput("commit-notes-md", commitNotes)
   })
   .catch(error => {
     console.error('Error:', error);
 });
+
+/*fetchCommitNotesV2(owner, repo)
+  .then(commitNotes => {
+    core.setOutput("commit-notes-md", commitNotes)
+  })
+  .catch(error => {
+    console.error('Error:', error);
+});*/
