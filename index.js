@@ -103,21 +103,6 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       pull_number: pullRequestNumber
     });
 
-    const prListResponse = await octokit.pulls.list({
-      owner: owner,
-      repo: repo,
-    });
-
-    // Extract the pull request data from the response
-    const pullRequests = prListResponse.data.map((pr) => {
-      const pullRequest = {};
-      pullRequest.number = pr.number;
-      pullRequest.title = pr.title;
-      pullRequest.body = pr.body;
-      return pullRequest;
-    });
-
-    console.log(pullRequests);
 
     const mergeNotes = [];
     const prNumbers = [];
@@ -162,10 +147,9 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       }
       else{
         if(isStringInputValid(commit.message)){
-          console.log("Setting PR");
           const prNumber = getPRNumberFromCommitNote(commit.message);          
           const pullRequest = getMergeNote(octokit, prNumber);
-
+          console.log(pullRequest);
           /*pullRequests.filter(pr => pr.number === prNumber);*/
           if(isStringInputValid(pullRequest.title)){
             markdownContent += `
