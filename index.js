@@ -169,12 +169,20 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
           repo: repo,
           pull_number: 35,
         });
-        markdownContent += `
+        if(isStringInputValid(response.data.title)){
+          markdownContent += `
+          ## ${response.data.title}`;
+        }
+        if(isStringInputValid(response.data.bodyy)){
+          markdownContent += `
+          ${response.data.body}`;
+        }
+        /*markdownContent += `
             PR NUMBER: => ${prNumber}`;
         mergeNote.title = response.data.title;
         mergeNote.body = response.data.body;
         //getMergeNote(octokit, prNumber);
-        mergeNotes.push(mergeNote);
+        mergeNotes.push(mergeNote);*/
       }
     })()
 
