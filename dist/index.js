@@ -10835,20 +10835,6 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       ${prResponse.data.body}`;
     }
 
-    const prResponse1 = await octokit.pulls.get({
-      owner: owner,
-      repo: repo,
-      pull_number: 35,
-    });
-
-    if(isStringInputValid(prResponse1.data.title)){
-      markdownContent += `
-      ## ${prResponse1.data.title}`;
-    }
-    if(isStringInputValid(prResponse1.data.body)){
-      markdownContent += `
-      ${prResponse1.data.body}`;
-    }
     /*markdownContent += `
     ${prResponse.data.number}`;*/
     const commits = response.data.map(commit => {
@@ -10893,6 +10879,22 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
         }
       }
     });
+
+    
+    const prResponse1 = await octokit.pulls.get({
+      owner: owner,
+      repo: repo,
+      pull_number: 35,
+    });
+
+    if(isStringInputValid(prResponse1.data.title)){
+      markdownContent += `
+      ## ${prResponse1.data.title}`;
+    }
+    if(isStringInputValid(prResponse1.data.body)){
+      markdownContent += `
+      ${prResponse1.data.body}`;
+    }
 
     /*getMergeNote(octokit, 35)
     .then(mergeNote => {
