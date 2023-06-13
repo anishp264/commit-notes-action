@@ -10822,6 +10822,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
     });
 
     const mergeNotes = [];
+    //const mergeNote = {};
 
     let markdownContent = `# Merge Notes`;
     if(isStringInputValid(prResponse.data.title)){
@@ -10845,15 +10846,14 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       if(container.committerName.toLowerCase() === "github")
       {
         container.commitType = prText;
-        if(isStringInputValid(commit.commit.message)){
+        /*if(isStringInputValid(commit.commit.message)){
           const prNumber = getPRNumberFromCommitNote(commit.commit.message);
           container.message = commit.commit.message.split("-pr\n\n")[1];
           container.message += `
           ${commit.sha}
           ${prNumber}`;
-          /*container.message += `
-          ${prNumber}`;*/
-        }                
+          getMergeNote(prNumber);
+        }*/                
       }
       else{
         if(commit.commit.message.includes("\n\n")){
@@ -10871,13 +10871,36 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
         - ${commit.commitDate} | ${commit.commitSha} | ${commit.message} [${commit.committerEmail}]`;
       }
       else{
-        mergeNotes.push(commit.message);
+        if(isStringInputValid(commit.message)){
+          const prNumber = getPRNumberFromCommitNote(commit.message);
+          getMergeNote(octokit, prNumber)
+          .then(mergeNote => {            
+            mergeNotes.push(mergeNote);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+          //mergeNotes.push(getMergeNote(octokit, prNumber));
+          /*container.message = commit.commit.message.split("-pr\n\n")[1];
+          container.message += `
+          ${commit.sha}
+          ${prNumber}`;*/
+        }
+        //mergeNotes.push(commit.message);
       }
     });
 
     mergeNotes.forEach((mergeNote) => {
-      markdownContent += `
-      ## ${mergeNote}`;
+      if(isStringInputValid(mergeNote.title)){
+        markdownContent += `
+        ## ${mergeNote.title}`;
+      }
+      if(isStringInputValid(mergeNote.body)){
+        markdownContent += `
+        ${mergeNote.body}`;
+      }
+      /*markdownContent += `
+      ## ${mergeNote}`;*/
     });
 
     markdownContent += `
@@ -10909,6 +10932,23 @@ function getPRNumberFromCommitNote(commitNote){
 
 function isStringInputValid(stringInput){
   return (!stringInput || stringInput.trim() === "") ? false : true;
+}
+
+async function getMergeNote(octokit, prNumber){
+  try{
+    const response = await octokit.pulls.listCommits({
+      owner,
+      repo,
+      pull_number: prNumber
+    });
+    const mergeNote = {};
+    mergeNote.title = response.data.title;
+    mergeNote.body = response.data.body;
+    return mergeNote;
+  }catch(error){
+    console.setFailed('Error retrieving merge notes:', error);
+    return [];
+  }
 }
 
 const owner = process.env.GITHUB_REPOSITORY.split("/")[0];
