@@ -10866,47 +10866,32 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       else{
         if(isStringInputValid(commit.message)){
           const prNumber = getPRNumberFromCommitNote(commit.message);          
-          /*const pullRequest = getMergeNote(octokit, prNumber);
-          console.log(pullRequest);*/
-          getMergeNote(octokit, prNumber)
-          .then(pullRequest => {
-            console.log(pullRequest);
-            mergeNotes.push(pullRequest);
-            /*markdownContent += `
-              ## ${pullRequest.title}`;
-            markdownContent += `
-              ${pullRequest.body}`;*/
-            /*if(isStringInputValid(pullRequest.title)){
-              markdownContent += `
-              ## ${pullRequest.title}`;
-            }
-            if(isStringInputValid(pullRequest.body)){
-              markdownContent += `
-              ${pullRequest.body}`;
-            }*/
-          })
-          .catch(error => {
-            console.error('Error:', error);
-          });
-          /*if(isStringInputValid(pullRequest.title)){
-            markdownContent += `
-            ## ${pullRequest.title}`;
-          }
-          if(isStringInputValid(pullRequest.body)){
-            markdownContent += `
-            ${pullRequest.body}`;
-          }*/
+          prNumbers.push(prNumber);
         }
       }
     });  
 
-    console.log(mergeNotes.length);
+    for (const prNumber of prNumbers){
+      getMergeNote(octokit, prNumber)
+          .then(pullRequest => {
+            console.log(pullRequest);
+            markdownContent += `
+              ## ${pullRequest.title}`;
+            markdownContent += `
+              ${pullRequest.body}`;
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+    }
 
-    mergeNotes.forEach((pullRequest) => {
+    //console.log(mergeNotes.length);
+
+    /*mergeNotes.forEach((pullRequest) => {
       markdownContent += `
       ## ${pullRequest.title}
       ${pullRequest.body}`;
-    });
+    });*/
 
     markdownContent += `
     ---
