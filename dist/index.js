@@ -10910,6 +10910,7 @@ async function getPRMarkDownContent(octokit, prs){
   let mdContent = ``;
   for (const prNumber of prs){
     const pullRequest = await getMergeNote(octokit, prNumber);
+    console.log(pullRequest);
     mdContent += `## ${pullRequest.title}
     ${pullRequest.body}
     `;
