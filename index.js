@@ -91,23 +91,26 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
 
   try {
 
-    const prResponse = await octokit.pulls.get({
+    /*const prResponse = await octokit.pulls.get({
         owner: owner,
         repo: repo,
         pull_number: pullRequestNumber,
-      });
-
-    const response = await octokit.pulls.listCommits({
-      owner,
-      repo,
-      pull_number: pullRequestNumber
-    });
+      });*/
 
     const prNumbers = [];
 
     let markdownContent = `# Merge Notes`;
 
-    if(isStringInputValid(prResponse.data.title)){
+    /*const response = await octokit.pulls.listCommits({
+      owner,
+      repo,
+      pull_number: pullRequestNumber
+    });*/
+
+    const pullRequest = await getPullRequest(octokit, pullRequestNumber);
+    markdownContent += getPullRequestMarkDownContent(pullRequest);
+
+    /*if(isStringInputValid(prResponse.data.title)){
       markdownContent += `
       ## ${prResponse.data.title}`;
     }
@@ -115,7 +118,13 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
     if(isStringInputValid(prResponse.data.body)){
       markdownContent += `
       ${prResponse.data.body}`;
-    }
+    }*/
+
+    const response = await octokit.pulls.listCommits({
+      owner,
+      repo,
+      pull_number: pullRequestNumber
+    });
 
     const commits = response.data.map(commit => {
       const container = {};
@@ -172,15 +181,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
 async function getPRMarkDownContent(octokit, prs){
   let mdContent = ``;
   for (const prNumber of prs){
-    const pullRequest = await getMergeNote(octokit, prNumber);
-    /*if(isStringInputValid(pullRequest.title)){
-      mdContent += `## ${pullRequest.title}
-      `;
-    }
-    if(isStringInputValid(pullRequest.title)){
-      mdContent += `${pullRequest.body}
-      `;
-    }*/
+    const pullRequest = await getPullRequest(octokit, prNumber);
     mdContent += getPullRequestMarkDownContent(pullRequest);
   }
   return mdContent;
@@ -193,8 +194,7 @@ function getPullRequestMarkDownContent(pullRequest){
     `;
   }
   if(isStringInputValid(pullRequest.title)){
-    mdContent += `${pullRequest.body}
-    `;
+    mdContent += `${pullRequest.body}`;
   }
   return mdContent;
 }
@@ -218,7 +218,7 @@ function isStringInputValid(stringInput){
   return (!stringInput || stringInput.trim() === "") ? false : true;
 }
 
-async function getMergeNote(octokit, prNumber){
+async function getPullRequest(octokit, prNumber){
   try{
     const response = await octokit.pulls.get({
       owner: owner,
