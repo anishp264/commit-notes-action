@@ -153,7 +153,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       }
     });  
 
-    for (const prNumber of prNumbers){
+    /*for (const prNumber of prNumbers){
       getMergeNote(octokit, prNumber)
           .then(pullRequest => {
             console.log(pullRequest);
@@ -165,8 +165,8 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
           .catch(error => {
             console.error('Error:', error);
           });
-    }
-
+    }*/
+    markdownContent += await getPRMarkDownContent(octokit, prNumbers);
     //console.log(mergeNotes.length);
 
     /*mergeNotes.forEach((pullRequest) => {
@@ -186,6 +186,17 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
     console.error('Error:', error);
     return [];
   }
+}
+
+async function getPRMarkDownContent(octokit, prs){
+  let mdContent = ``;
+  for (const prNumber of prs){
+    const pullRequest = await getMergeNote(octokit, prNumber);
+    mdContent += `## ${pullRequest.title}
+    ${pullRequest.body}
+    `;
+  }
+  return mdContent;
 }
 
 async function fetchCommitNotesV2(owner, repo){
