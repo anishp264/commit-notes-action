@@ -154,8 +154,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
     if(shas.length > 0){
       const result = await getPRMarkDownContentBySHAs(octokit,shas);
       console.log(result);
-      markdownContent += `
-      ${result}`;
+      markdownContent += `${result}`;
     }   
 
     
