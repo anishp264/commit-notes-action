@@ -153,6 +153,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
     //const result = await getPRMarkDownContent(octokit, prNumbers);
     if(shas.length > 0){
       const result = await getPRMarkDownContentBySHAs(octokit,shas);
+      console.log(result);
       markdownContent += `
       ${result}`;
     }   
@@ -261,12 +262,12 @@ async function getPullRequestBySHAV1(octokit, sha){
       repo: repo,
       state: 'all',
     });
-    const pullRequests = response.data.map(pullRequest => {
-      const mergeNote = {};
-      mergeNote.title = pullRequest.title;
-      mergeNote.body = pullRequest.body;
-      mergeNote.sha = pullRequest.merge_commit_sha;
-      return mergeNote;
+    const pullRequests = response.data.map(pullRequestCont => {
+      const pullRequest = {};
+      pullRequest.title = pullRequestCont.title;
+      pullRequest.body = pullRequestCont.body;
+      pullRequest.sha = pullRequestCont.merge_commit_sha;
+      return pullRequest;
     });
     console.log(pullRequests);
     const pullRequest = pullRequests.filter(obj => obj.sha === sha);
