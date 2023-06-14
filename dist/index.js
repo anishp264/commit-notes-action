@@ -10886,7 +10886,9 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
     }*/
     const result = await getPRMarkDownContent(octokit, prNumbers);
     console.log(result);
-    markdownContent += result;
+    markdownContent += `
+    ${result}`;
+    //result;
     //console.log(mergeNotes.length);
 
     /*mergeNotes.forEach((pullRequest) => {
