@@ -198,7 +198,8 @@ function getPullRequestMarkDownContent(pullRequest){
     `;
   }
   if(isStringInputValid(pullRequest.title)){
-    mdContent += `${pullRequest.body}`;
+    mdContent += `${pullRequest.body}
+    `;
   }
   return mdContent;
 }
