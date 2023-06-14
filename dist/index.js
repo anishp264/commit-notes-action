@@ -10863,13 +10863,17 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       }
     });  
 
+    if(prNumbers.length > 0){
+      const result = await getPRMarkDownContent(octokit, prNumbers);
+      markdownContent += `
+      ${result}`;
+    }
     //const result = await getPRMarkDownContent(octokit, prNumbers);
-    if(shas.length > 0){
+    /*if(shas.length > 0){
       const result = await getPRMarkDownContentBySHAs(octokit,shas);
-    }    
+    } */   
 
-    markdownContent += `
-    ${result}`;
+    
 
     markdownContent += `
     ---
