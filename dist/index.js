@@ -10915,6 +10915,7 @@ async function getPRMarkDownContent(octokit, prs){
     ${pullRequest.body}
     `;
   }
+  console.log(mdContent);
   return mdContent;
 }
 
