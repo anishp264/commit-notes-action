@@ -10810,6 +10810,7 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
   try {
 
     const prNumbers = [];
+    const shas = [];
 
     let markdownContent = `# Merge Notes`;
 
@@ -10858,10 +10859,14 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
           const prNumber = getPRNumberFromCommitNote(commit.message);          
           prNumbers.push(prNumber);
         }
+        shas.push(commit.commitSha);
       }
     });  
 
-    const result = await getPRMarkDownContent(octokit, prNumbers);
+    //const result = await getPRMarkDownContent(octokit, prNumbers);
+    if(shas.length > 0){
+      const result = await getPRMarkDownContentBySHAs(octokit,shas);
+    }    
 
     markdownContent += `
     ${result}`;
@@ -10882,6 +10887,15 @@ async function getPRMarkDownContent(octokit, prs){
   let mdContent = ``;
   for (const prNumber of prs){
     const pullRequest = await getPullRequest(octokit, prNumber);
+    mdContent += getPullRequestMarkDownContent(pullRequest);
+  }
+  return mdContent;
+}
+
+async function getPRMarkDownContentBySHAs(octokit, shas){
+  let mdContent = ``;
+  for (const sha of shas){
+    const pullRequest = await getPullRequestBySHA(octokit, sha);
     mdContent += getPullRequestMarkDownContent(pullRequest);
   }
   return mdContent;
@@ -10924,6 +10938,23 @@ async function getPullRequest(octokit, prNumber){
       owner: owner,
       repo: repo,
       pull_number: prNumber,
+    });
+    const mergeNote = {};
+    mergeNote.title = response.data.title;
+    mergeNote.body = response.data.body;
+    return mergeNote;
+  }catch(error){
+    console.setFailed('Error retrieving merge notes:', error);
+    return [];
+  }
+}
+
+async function getPullRequestBySHA(octokit, sha){
+  try{
+    const response = await octokit.pulls.get({
+      owner: owner,
+      repo: repo,
+      head: `${owner}:${sha}`,
     });
     const mergeNote = {};
     mergeNote.title = response.data.title;
