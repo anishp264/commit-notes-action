@@ -10891,17 +10891,28 @@ async function getPRMarkDownContent(octokit, prs){
   let mdContent = ``;
   for (const prNumber of prs){
     const pullRequest = await getMergeNote(octokit, prNumber);
-    if(isStringInputValid(pullRequest.title)){
+    /*if(isStringInputValid(pullRequest.title)){
       mdContent += `## ${pullRequest.title}
       `;
     }
     if(isStringInputValid(pullRequest.title)){
       mdContent += `${pullRequest.body}
       `;
-    }
-    /*mdContent += `## ${pullRequest.title}
-    ${pullRequest.body}
-    `;*/
+    }*/
+    mdContent += getPullRequestMarkDownContent(pullRequest);
+  }
+  return mdContent;
+}
+
+function getPullRequestMarkDownContent(pullRequest){
+  let mdContent = ``;
+  if(isStringInputValid(pullRequest.title)){
+    mdContent += `## ${pullRequest.title}
+    `;
+  }
+  if(isStringInputValid(pullRequest.title)){
+    mdContent += `${pullRequest.body}
+    `;
   }
   return mdContent;
 }
