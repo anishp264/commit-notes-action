@@ -10821,16 +10821,15 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       pull_number: pullRequestNumber
     });
 
-
-    const mergeNotes = [];
     const prNumbers = [];
-    //const mergeNote = {};
 
     let markdownContent = `# Merge Notes`;
+
     if(isStringInputValid(prResponse.data.title)){
       markdownContent += `
       ## ${prResponse.data.title}`;
     }
+
     if(isStringInputValid(prResponse.data.body)){
       markdownContent += `
       ${prResponse.data.body}`;
@@ -10871,31 +10870,10 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       }
     });  
 
-    /*for (const prNumber of prNumbers){
-      getMergeNote(octokit, prNumber)
-          .then(pullRequest => {
-            console.log(pullRequest);
-            markdownContent += `
-              ## ${pullRequest.title}`;
-            markdownContent += `
-              ${pullRequest.body}`;
-          })
-          .catch(error => {
-            console.error('Error:', error);
-          });
-    }*/
     const result = await getPRMarkDownContent(octokit, prNumbers);
-    console.log(result);
+
     markdownContent += `
     ${result}`;
-    //result;
-    //console.log(mergeNotes.length);
-
-    /*mergeNotes.forEach((pullRequest) => {
-      markdownContent += `
-      ## ${pullRequest.title}
-      ${pullRequest.body}`;
-    });*/
 
     markdownContent += `
     ---
@@ -10904,7 +10882,6 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
 
     return markdownContent;
   } catch (error) {
-    //console.setFailed('Error retrieving commit messages:', error);
     console.error('Error:', error);
     return [];
   }
@@ -10914,10 +10891,17 @@ async function getPRMarkDownContent(octokit, prs){
   let mdContent = ``;
   for (const prNumber of prs){
     const pullRequest = await getMergeNote(octokit, prNumber);
-    console.log(pullRequest);
-    mdContent += `## ${pullRequest.title}
+    if(isStringInputValid(pullRequest.title)){
+      mdContent += `## ${pullRequest.title}
+      `;
+    }
+    if(isStringInputValid(pullRequest.title)){
+      mdContent += `${pullRequest.body}
+      `;
+    }
+    /*mdContent += `## ${pullRequest.title}
     ${pullRequest.body}
-    `;
+    `;*/
   }
   return mdContent;
 }
