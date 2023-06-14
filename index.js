@@ -91,34 +91,12 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
 
   try {
 
-    /*const prResponse = await octokit.pulls.get({
-        owner: owner,
-        repo: repo,
-        pull_number: pullRequestNumber,
-      });*/
-
     const prNumbers = [];
 
     let markdownContent = `# Merge Notes`;
 
-    /*const response = await octokit.pulls.listCommits({
-      owner,
-      repo,
-      pull_number: pullRequestNumber
-    });*/
-
     const pullRequest = await getPullRequest(octokit, pullRequestNumber);
     markdownContent += getPullRequestMarkDownContent(pullRequest);
-
-    /*if(isStringInputValid(prResponse.data.title)){
-      markdownContent += `
-      ## ${prResponse.data.title}`;
-    }
-
-    if(isStringInputValid(prResponse.data.body)){
-      markdownContent += `
-      ${prResponse.data.body}`;
-    }*/
 
     const response = await octokit.pulls.listCommits({
       owner,
