@@ -268,6 +268,7 @@ async function getPullRequestBySHAV1(octokit, sha){
       mergeNote.sha = pullRequest.merge_commit_sha;
       return mergeNote;
     });
+    console.log(pullRequests);
     const pullRequest = pullRequests.filter(obj => obj.sha === sha);
     return pullRequest;    
   }catch(error){
