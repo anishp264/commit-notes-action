@@ -10961,7 +10961,7 @@ async function getPullRequestBySHA(octokit, sha){
     mergeNote.body = response.data.body;
     return mergeNote;
   }catch(error){
-    console.setFailed('Error retrieving merge notes:', error);
+    console.error('Error retrieving merge notes:', error);
     return [];
   }
 }
