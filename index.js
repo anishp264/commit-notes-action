@@ -90,8 +90,6 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
   });
 
   try {
-
-    const prNumbers = [];
     const shas = [];
 
     let markdownContent = `# Merge Notes`;
@@ -137,20 +135,10 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
         commitMarkDownContent += `
         - ${commit.commitDate} | ${commit.commitSha} | ${commit.message} [${commit.committerEmail}]`;
         //ends
-        if(isStringInputValid(commit.message)){
-          const prNumber = getPRNumberFromCommitNote(commit.message);          
-          prNumbers.push(prNumber);
-        }
         shas.push(commit.commitSha);
       }
     });  
 
-    /*if(prNumbers.length > 0){
-      const result = await getPRMarkDownContent(octokit, prNumbers);
-      markdownContent += `
-      ${result}`;
-    }*/
-    //const result = await getPRMarkDownContent(octokit, prNumbers);
     if(shas.length > 0){
       const result = await getPRMarkDownContentBySHAs(octokit,shas);
       console.log(result);
@@ -235,23 +223,6 @@ async function getPullRequest(octokit, prNumber){
     return mergeNote;
   }catch(error){
     console.setFailed('Error retrieving merge notes:', error);
-    return [];
-  }
-}
-
-async function getPullRequestBySHA(octokit, sha){
-  try{
-    const response = await octokit.pulls.get({
-      owner: owner,
-      repo: repo,
-      head: `${owner}:${sha}`,
-    });
-    const mergeNote = {};
-    mergeNote.title = response.data.title;
-    mergeNote.body = response.data.body;
-    return mergeNote;
-  }catch(error){
-    console.error('Error retrieving merge notes:', error);
     return [];
   }
 }
