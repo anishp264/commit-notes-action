@@ -10988,6 +10988,7 @@ async function getPullRequestBySHAV1(octokit, sha){
     });
     console.log(pullRequests);
     const pullRequest = pullRequests.filter(obj => obj.sha === sha);
+    console.log(pullRequest);
     return pullRequest;    
   }catch(error){
     console.error('Error retrieving merge notes:', error);
