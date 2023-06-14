@@ -10850,6 +10850,10 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
         - ${commit.commitDate} | ${commit.commitSha} | ${commit.message} [${commit.committerEmail}]`;
       }
       else{
+        //remove below line
+        commitMarkDownContent += `
+        - ${commit.commitDate} | ${commit.commitSha} | ${commit.message} [${commit.committerEmail}]`;
+        //ends
         if(isStringInputValid(commit.message)){
           const prNumber = getPRNumberFromCommitNote(commit.message);          
           prNumbers.push(prNumber);
