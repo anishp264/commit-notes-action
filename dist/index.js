@@ -10903,7 +10903,7 @@ async function getPRMarkDownContentBySHAs(octokit, shas){
   let mdContent = ``;
   const pullRequests = await getPullRequestList(octokit);
   for (const sha of shas){
-    const pullRequest = pullRequests.filter(obj => obj.sha === sha);
+    const pullRequest = pullRequests.filter(obj => {return obj.sha === sha});
     mdContent += getPullRequestMarkDownContent(pullRequest);
   }
   return mdContent;
