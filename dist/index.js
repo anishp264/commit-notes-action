@@ -10884,7 +10884,9 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
             console.error('Error:', error);
           });
     }*/
-    markdownContent += await getPRMarkDownContent(octokit, prNumbers);
+    const result = await getPRMarkDownContent(octokit, prNumbers);
+    console.log(result);
+    markdownContent += result;
     //console.log(mergeNotes.length);
 
     /*mergeNotes.forEach((pullRequest) => {
@@ -10915,47 +10917,7 @@ async function getPRMarkDownContent(octokit, prs){
     ${pullRequest.body}
     `;
   }
-  console.log(mdContent);
   return mdContent;
-}
-
-async function fetchCommitNotesV2(owner, repo){
-  const octokit = new Octokit({
-    auth: process.env.GITHUB_TOKEN 
-  });
-
-  try {
-    const prListResponse = await octokit.pulls.list({
-      owner: owner,
-      repo: repo,
-    });
-
-    // Extract the pull request data from the response
-    const pullRequests = prListResponse.data.map((pr) => {
-      const pullRequest = {};
-      pullRequest.number = pr.number;
-      pullRequest.title = pr.title;
-      pullRequest.body = pr.body;
-      return pullRequest;
-    });
-
-    console.log(pullRequests);
-
-    const mergeNotes = [];
-    const prNumbers = [];
-    //const mergeNote = {};
-
-    markdownContent += `
-    ---
-    ${commitMarkDownContent}
-    ---`;
-
-    return markdownContent;
-  } catch (error) {
-    //console.setFailed('Error retrieving commit messages:', error);
-    console.error('Error:', error);
-    return [];
-  }
 }
 
 function getPRNumber(){
@@ -11005,14 +10967,6 @@ fetchCommitNotesV1(owner, repo, pullNumber)
   .catch(error => {
     console.error('Error:', error);
 });
-
-/*fetchCommitNotesV2(owner, repo)
-  .then(commitNotes => {
-    core.setOutput("commit-notes-md", commitNotes)
-  })
-  .catch(error => {
-    console.error('Error:', error);
-});*/
 })();
 
 module.exports = __webpack_exports__;
