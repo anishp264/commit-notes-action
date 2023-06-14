@@ -10863,15 +10863,17 @@ async function fetchCommitNotesV1(owner, repo, pullRequestNumber){
       }
     });  
 
-    if(prNumbers.length > 0){
+    /*if(prNumbers.length > 0){
       const result = await getPRMarkDownContent(octokit, prNumbers);
       markdownContent += `
       ${result}`;
-    }
+    }*/
     //const result = await getPRMarkDownContent(octokit, prNumbers);
-    /*if(shas.length > 0){
+    if(shas.length > 0){
       const result = await getPRMarkDownContentBySHAs(octokit,shas);
-    } */   
+      markdownContent += `
+      ${result}`;
+    }   
 
     
 
@@ -10899,7 +10901,7 @@ async function getPRMarkDownContent(octokit, prs){
 async function getPRMarkDownContentBySHAs(octokit, shas){
   let mdContent = ``;
   for (const sha of shas){
-    const pullRequest = await getPullRequestBySHA(octokit, sha);
+    const pullRequest = await getPullRequestBySHAV1(octokit, sha);
     mdContent += getPullRequestMarkDownContent(pullRequest);
   }
   return mdContent;
@@ -10964,6 +10966,28 @@ async function getPullRequestBySHA(octokit, sha){
     mergeNote.title = response.data.title;
     mergeNote.body = response.data.body;
     return mergeNote;
+  }catch(error){
+    console.error('Error retrieving merge notes:', error);
+    return [];
+  }
+}
+
+async function getPullRequestBySHAV1(octokit, sha){
+  try{
+    const response = await octokit.pulls.list({
+      owner: owner,
+      repo: repo,
+      state: 'all',
+    });
+    const pullRequests = response.data.map(pullRequest => {
+      const mergeNote = {};
+      mergeNote.title = pullRequest.title;
+      mergeNote.body = pullRequest.body;
+      mergeNote.sha = pullRequest.merge_commit_sha;
+      return mergeNote;
+    });
+    const pullRequest = pullRequests.filter(obj => obj.sha === sha);
+    return pullRequest;    
   }catch(error){
     console.error('Error retrieving merge notes:', error);
     return [];
