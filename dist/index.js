@@ -10797,7 +10797,7 @@ async function fetchCommitNotes(owner, repo, pullRequestNumber){
 
     return markdownContent;
   } catch (error) {
-    console.setFailed('Error retrieving commit messages:', error);
+    console.error('Error retrieving commit messages:', error);
     return [];
   }
 }
@@ -10940,7 +10940,7 @@ async function getPullRequest(octokit, prNumber){
     mergeNote.body = response.data.body;
     return mergeNote;
   }catch(error){
-    console.setFailed('Error retrieving merge notes:', error);
+    console.error('Error retrieving merge notes:', error);
     return [];
   }
 }
